@@ -2,7 +2,7 @@
 name: alarmplayer
 description: playing alarms
 version: 1.0.0
-homepage:
+homepage: https://github.com/Mrbluesky-ai/flutter-alarmplayer
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
