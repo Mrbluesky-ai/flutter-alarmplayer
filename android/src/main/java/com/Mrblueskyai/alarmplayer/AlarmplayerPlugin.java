@@ -39,12 +39,11 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
       case "play":
         String url = Objects.requireNonNull(call.argument("url")).toString();
         double volume = Objects.requireNonNull(call.argument("volume"));
-        boolean loop = Objects.requireNonNull(call.argument("loop"));
-        play(url, volume, loop);
+        play(url, volume);
         result.success(null);
         break;
       case "playing":
-        result.success(isAlarmPlaying);
+        result.success(mMediaPlayer.isPlaying());
         break;
       case "stop":
         stop();
@@ -55,7 +54,7 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
     }
   }
 
-  private void play(String url, double volume, boolean loop){
+  private void play(String url, double volume){
     if(isAlarmPlaying){ return;}
     try {
       mMediaPlayer = new MediaPlayer();
@@ -65,9 +64,9 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
       System.out.println(_volume + "***");
       originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
       audioManager.setStreamVolume(AudioManager.STREAM_ALARM, _volume, 0);
-      if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0 && !(isAlarmPlaying)) {
+      if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
           mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-          mMediaPlayer.setLooping(loop);
+          mMediaPlayer.setLooping(true);
           mMediaPlayer.prepare();
           mMediaPlayer.start();
           isAlarmPlaying = true;

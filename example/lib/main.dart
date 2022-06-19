@@ -41,14 +41,13 @@ class _MyAppState extends State<MyApp> {
       Container(
         margin: EdgeInsets.all(25),
         child: FlatButton(
-          child: Text('klik ff', style: TextStyle(fontSize: 20.0),),
+          child: Text('start alarm', style: TextStyle(fontSize: 20.0),),
           color: Colors.blueAccent,
           textColor: Colors.white,
           onPressed: () async {
             alarmplayer.Alarm(
               url: "assets/2.mp3",
               volume: 0.5,
-              looping: false,
             );
 
             },
@@ -58,11 +57,11 @@ class _MyAppState extends State<MyApp> {
       Container(
         margin: EdgeInsets.all(25),
         child: FlatButton(
-          child: Text('klik ff', style: TextStyle(fontSize: 20.0),),
+          child: Text('stop alarm', style: TextStyle(fontSize: 20.0),),
           color: Colors.blueAccent,
           textColor: Colors.white,
           onPressed: () async {
-            alarmplayer.IsPlaying();
+            alarmplayer.StopAlarm();
             },
         ),
       ),

@@ -42,7 +42,6 @@ Play alarm.
 alarmplayer.Alarm(
   url: "assets/alarm.mp3",  // Path of sound file. 
   volume: 0.5,              // optional, set the volume, default 1.
-  looping: false,           // optional, looping?, default true.
 );
 ```
 

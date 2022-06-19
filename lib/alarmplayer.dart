@@ -7,16 +7,15 @@ import 'package:path_provider/path_provider.dart';
 class Alarmplayer {
   final methodChannel = const MethodChannel('alarmplayer');
 
-  Future<void> Alarm({required String url, double? volume, bool? looping}) async {
+  Future<void> Alarm({required String url, double? volume}) async {
     volume = volume?? 1;
-    looping = looping?? true;
     if(volume > 1){
       volume = 1;
     } else if(volume < 0){
       volume = 0;
     }
     print(volume);
-    await methodChannel.invokeMethod('play', {'url': await generateAssetUri(url), 'volume': volume ,'loop': looping});
+    await methodChannel.invokeMethod('play', {'url': await generateAssetUri(url), 'volume': volume});
   }
 
   Future<void> StopAlarm() async {
