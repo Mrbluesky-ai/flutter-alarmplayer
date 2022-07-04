@@ -17,7 +17,7 @@ import java.util.Objects;
 /** AlarmplayerPlugin */
 public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
   private Context context;
-  private static MediaPlayer mMediaPlayer;
+  private static MediaPlayer mMediaPlayer = new MediaPlayer();
   private boolean isAlarmPlaying;
   private int originalVolume;
   private static AudioManager audioManager;
@@ -54,34 +54,42 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
     }
   }
 
-  private void play(String url, double volume){
-    if(isAlarmPlaying){ return;}
-    try {
-      mMediaPlayer = new MediaPlayer();
-      mMediaPlayer.setDataSource("file://" + url);
-      audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-      int _volume = (int) (Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) * volume));
-      System.out.println(_volume + "***");
-      originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
-      audioManager.setStreamVolume(AudioManager.STREAM_ALARM, _volume, 0);
-      if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+
+    private void play(String url, double volume) {
+      if (isAlarmPlaying) {
+        return;
+      }
+//      System.out.println(mMediaPlayer.isPlaying() + " ***");
+      try {
+//        mMediaPlayer = new MediaPlayer();
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        int _volume = (int) (Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) * volume));
+        originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, _volume, 0);
+
+        mMediaPlayer.setDataSource("file://" + url);
+//        int result = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+//        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
           mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
           mMediaPlayer.setLooping(true);
           mMediaPlayer.prepare();
           mMediaPlayer.start();
           isAlarmPlaying = true;
-        }
-    } catch (IOException e) {
-      e.printStackTrace();
+ //       }
+      } catch (IOException e) {
+        System.out.println(e);
+        e.printStackTrace();
+      }
     }
-  }
 
   private void stop(){
     try {
       if (mMediaPlayer != null) {
         mMediaPlayer.stop();
         mMediaPlayer.release();
-        mMediaPlayer = null;
+//        mMediaPlayer = null;
 
         final AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);

@@ -33,3 +33,7 @@ android {
         minSdkVersion 16
     }
 }
+
+dependencies {
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.7.1'
+}
