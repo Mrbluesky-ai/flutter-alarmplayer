@@ -35,6 +35,7 @@ class _MyAppState extends State<MyApp> {
     // margin: const EdgeInsets.symmetric(horizontal: 30),
     child: SingleChildScrollView(
     child: Column(
+
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: <Widget>[

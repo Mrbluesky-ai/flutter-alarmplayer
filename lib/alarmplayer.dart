@@ -14,7 +14,6 @@ class Alarmplayer {
     } else if(volume < 0){
       volume = 0;
     }
-    print(volume);
     await methodChannel.invokeMethod('play', {'url': await generateAssetUri(url), 'volume': volume});
   }
 

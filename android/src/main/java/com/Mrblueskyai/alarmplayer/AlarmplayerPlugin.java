@@ -3,25 +3,32 @@ package com.Mrblueskyai.alarmplayer;
 
 
 import androidx.annotation.NonNull;
+
+import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 // made by: Mrblueskyai
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.*;
+import android.os.Build;
 import java.io.*;
 import java.util.Objects;
 
+
 /** AlarmplayerPlugin */
 public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
-  private Context context;
-  private static MediaPlayer mMediaPlayer = new MediaPlayer();
+  public Context context;
+  private MediaPlayer mMediaPlayer;
   private boolean isAlarmPlaying;
   private int originalVolume;
-  private static AudioManager audioManager;
   private MethodChannel channel;
+  private FlutterEngine backgroundFlutterEngine;
 
 
 
@@ -32,9 +39,10 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
     context = flutterPluginBinding.getApplicationContext();
   }
 
+
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    System.out.println("\n  **** " + call.method + " **** \n   " + context.getResources().toString());
+//    System.out.println("\n  **** " + call.method + " **** \n   " + context.getResources().toString());
     switch (call.method) {
       case "play":
         String url = Objects.requireNonNull(call.argument("url")).toString();
@@ -55,41 +63,52 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
   }
 
 
-    private void play(String url, double volume) {
+
+
+  @SuppressWarnings("deprecation")
+  private void play(String url, double volume) {
       if (isAlarmPlaying) {
         return;
       }
-//      System.out.println(mMediaPlayer.isPlaying() + " ***");
       try {
-//        mMediaPlayer = new MediaPlayer();
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        mMediaPlayer = new MediaPlayer();
+        mMediaPlayer.setDataSource(url);
 
+        final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int _volume = (int) (Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) * volume));
         originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, _volume, 0);
 
-        mMediaPlayer.setDataSource("file://" + url);
-//        int result = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
-//        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-          mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+        if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+          if (Build.VERSION.SDK_INT <= 21) {
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+          } else {
+            mMediaPlayer.setAudioAttributes(new AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_ALARM)
+                    .build());
+          }
+
+
           mMediaPlayer.setLooping(true);
           mMediaPlayer.prepare();
           mMediaPlayer.start();
           isAlarmPlaying = true;
- //       }
+        } else{
+          System.out.println("couldn't set the volume higher, so no alarm playing");
+        }
       } catch (IOException e) {
-        System.out.println(e);
         e.printStackTrace();
       }
-    }
+  }
+
 
   private void stop(){
     try {
       if (mMediaPlayer != null) {
         mMediaPlayer.stop();
         mMediaPlayer.release();
-//        mMediaPlayer = null;
+        mMediaPlayer = null;
 
         final AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
