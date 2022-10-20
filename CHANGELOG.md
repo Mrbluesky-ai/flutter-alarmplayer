@@ -1,3 +1,7 @@
+## 1.0.5
+
+* bugs fix
+
 ## 1.0.4
 
 * fixed deprecation warning

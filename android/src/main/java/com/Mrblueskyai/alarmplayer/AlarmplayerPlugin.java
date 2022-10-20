@@ -51,7 +51,11 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
         result.success(null);
         break;
       case "playing":
-        result.success(mMediaPlayer.isPlaying());
+        if(mMediaPlayer != null){
+          result.success(mMediaPlayer.isPlaying());
+        } else{
+          result.success(false);
+        }
         break;
       case "stop":
         stop();
