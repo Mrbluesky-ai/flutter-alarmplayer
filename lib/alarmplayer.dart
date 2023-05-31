@@ -6,16 +6,37 @@ import 'package:path_provider/path_provider.dart';
 
 class Alarmplayer {
   final methodChannel = const MethodChannel('alarmplayer');
+  Function? _callback;
 
-  Future<void> Alarm({required String url, double? volume}) async {
-    volume = volume?? 1;
+  Future<void> Alarm({required String url, double? volume, bool? looping, Function? callback }) async {
+
+    _callback = callback;
+    bool UsingCallback = callback != null;
+    looping ??= true;
+    volume ??= 1;
     if(volume > 1){
       volume = 1;
     } else if(volume < 0){
       volume = 0;
     }
-    await methodChannel.invokeMethod('play', {'url': await generateAssetUri(url), 'volume': volume});
+    if(UsingCallback){
+      CallbackListener();
+    }
+
+    await methodChannel.invokeMethod('play', {'url': await generateAssetUri(url), 'volume': volume, "loop" : looping, "callback" : UsingCallback });
   }
+
+  void CallbackListener(){
+    methodChannel.setMethodCallHandler((call) {
+      if(call.method == "callback"){
+        return _callback!();
+      } else {
+        throw "";
+      }
+    }
+    );
+  }
+
 
   Future<void> StopAlarm() async {
     await methodChannel.invokeMethod('stop');

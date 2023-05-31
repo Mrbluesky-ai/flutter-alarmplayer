@@ -45,9 +45,11 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
 //    System.out.println("\n  **** " + call.method + " **** \n   " + context.getResources().toString());
     switch (call.method) {
       case "play":
+        boolean callback = Objects.requireNonNull(call.argument("callback"));
+        boolean looping = Objects.requireNonNull(call.argument("loop"));
         String url = Objects.requireNonNull(call.argument("url")).toString();
         double volume = Objects.requireNonNull(call.argument("volume"));
-        play(url, volume);
+        play(url, volume, looping, callback);
         result.success(null);
         break;
       case "playing":
@@ -70,13 +72,14 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
 
 
   @SuppressWarnings("deprecation")
-  private void play(String url, double volume) {
+  private void play(String url, double volume, boolean loop, boolean callback ) {
       if (isAlarmPlaying) {
         return;
       }
       try {
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setDataSource(url);
+
 
         final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int _volume = (int) (Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) * volume));
@@ -94,9 +97,22 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
           }
 
 
-          mMediaPlayer.setLooping(true);
+          mMediaPlayer.setLooping(loop);
+
           mMediaPlayer.prepare();
+
+          mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+              isAlarmPlaying = false;
+              if(callback) {
+                channel.invokeMethod("callback", null);
+              }
+            }
+          });
+
           mMediaPlayer.start();
+          mMediaPlayer.setLooping(loop);
           isAlarmPlaying = true;
         } else{
           System.out.println("couldn't set the volume higher, so no alarm playing");
@@ -105,6 +121,7 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
         e.printStackTrace();
       }
   }
+
 
 
   private void stop(){

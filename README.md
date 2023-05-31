@@ -42,6 +42,9 @@ Play alarm.
 alarmplayer.Alarm(
   url: "assets/alarm.mp3",  // Path of sound file. 
   volume: 0.5,              // optional, set the volume, default 1.
+  looping: true             // optional, if you want to loop you're alarm or not
+  callback: ()              // this is the callback, it's getting executed if you're alarm
+  => {print("i'm done!")}   // is done playing. Note if you're alarm is on loop you're callback won't be executed 
 );
 ```
 

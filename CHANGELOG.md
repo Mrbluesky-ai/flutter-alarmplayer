@@ -1,3 +1,9 @@
+## 1.1.0
+
+* Added possibility to toggle looping.
+* Added callback when music is done playing.
+* Updated to the newest flutter version.
+
 ## 1.0.5
 
 * bugs fix

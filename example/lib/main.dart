@@ -17,9 +17,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  String _platformVersion = 'Unknown';
   Alarmplayer alarmplayer = Alarmplayer();
+  bool playing = false;
 
+  void switchPlaying(){
+    playing = !playing;
+    setState(() {});
+  }
 
   // Platform messages are asynchronous, so we initialize in an async method.
 
@@ -41,27 +45,39 @@ class _MyAppState extends State<MyApp> {
     children: <Widget>[
       Container(
         margin: EdgeInsets.all(25),
-        child: ElevatedButton(
+        child: playing?
+        ElevatedButton(
+          child: Text('stop alarm', style: TextStyle(fontSize: 20.0),),
+          onPressed: () async {
+            alarmplayer.StopAlarm();
+            switchPlaying();
+            },
+        )
+        :
+        ElevatedButton(
           child: Text('start alarm', style: TextStyle(fontSize: 20.0),),
           onPressed: () async {
+            switchPlaying();
             alarmplayer.Alarm(
               url: "assets/2.mp3",
               volume: 0.5,
+              looping: false,
+              callback: switchPlaying,
             );
 
             },
         ),
       ),
 
-      Container(
-        margin: EdgeInsets.all(25),
-        child: ElevatedButton(
-          child: Text('stop alarm', style: TextStyle(fontSize: 20.0),),
-          onPressed: () async {
-            alarmplayer.StopAlarm();
-            },
-        ),
-      ),
+      // Container(
+      //   margin: EdgeInsets.all(25),
+      //   child: ElevatedButton(
+      //     child: Text('stop alarm', style: TextStyle(fontSize: 20.0),),
+      //     onPressed: () async {
+      //       alarmplayer.StopAlarm();
+      //       },
+      //   ),
+      // ),
 
 
               ],
