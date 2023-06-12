@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'alarmplayer'
-  s.version          = '0.0.1'
+  s.version          = '1.1.0'
   s.summary          = 'playing alarms'
   s.description      = <<-DESC
 playing alarms
