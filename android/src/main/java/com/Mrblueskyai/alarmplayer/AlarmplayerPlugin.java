@@ -24,9 +24,9 @@ import java.util.Objects;
 /** AlarmplayerPlugin */
 public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
   public Context context;
-  private MediaPlayer mMediaPlayer;
+  private static MediaPlayer mMediaPlayer;
   private boolean isAlarmPlaying;
-  private int originalVolume;
+  private static int originalVolume;
   private MethodChannel channel;
   private FlutterEngine backgroundFlutterEngine;
 
@@ -82,8 +82,10 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
 
 
         final AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
         int _volume = (int) (Math.round(audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM) * volume));
         originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        System.out.println("originalVolume: " + originalVolume);
 
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM, _volume, 0);
 
@@ -104,7 +106,8 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
           mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-              isAlarmPlaying = false;
+              stop();
+
               if(callback) {
                 channel.invokeMethod("callback", null);
               }
@@ -127,12 +130,13 @@ public class AlarmplayerPlugin implements FlutterPlugin, MethodCallHandler {
   private void stop(){
     try {
       if (mMediaPlayer != null) {
+        final AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
         mMediaPlayer.stop();
         mMediaPlayer.release();
         mMediaPlayer = null;
 
-        final AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
+
         isAlarmPlaying = false;
       }
     } catch(Exception e){

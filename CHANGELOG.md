@@ -1,3 +1,7 @@
+## 1.1.1
+
+* [bugfix] fixed bug that when you're alarm is done playing, the volume is not set back to the original volume.
+
 ## 1.1.0
 
 * Added possibility to toggle looping.
