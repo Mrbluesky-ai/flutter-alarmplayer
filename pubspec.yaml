@@ -1,7 +1,7 @@
 #made by: Mrblueskyai
 name: alarmplayer
 description: playing alarms
-version: 1.1.1
+version: 2.0.0
 homepage: https://github.com/Mrbluesky-ai/flutter-alarmplayer
 
 environment:
@@ -11,14 +11,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.1.4
+  plugin_platform_interface: ^2.1.8
 
-  path_provider: ^2.0.15
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.1
+  mockito: ^5.4.4
+  build_runner: ^2.4.8
 
 
 
