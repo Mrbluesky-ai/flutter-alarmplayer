@@ -1,4 +1,4 @@
-#import "AlarmplayerPlugin.h"
+#import "./include/alarmplayer/AlarmplayerPlugin.h"
 
 @implementation AlarmplayerPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
