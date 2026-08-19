@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-08-19
+
+### Breaking Changes
+- iOS: replaced CocoaPods with Swift Package Manager (`ios/alarmplayer/Package.swift`)
+- Minimum Flutter version raised to 3.44.0 (Swift Package Manager is used by default)
+- Minimum iOS deployment target raised from 9.0 to 13.0
+- Projects that still use CocoaPods must migrate to Swift Package Manager or stay on v2.0.0
+
+### Changed
+- Example app migrated to the UIScene lifecycle (`FlutterSceneDelegate`, plugins registered in `didInitializeImplicitFlutterEngine`)
+- Example app iOS deployment target raised from 11.0 to 13.0
+
 ## [2.0.0] - 2025-12-15
 
 ### Breaking Changes
@@ -182,6 +194,7 @@ class _MyWidgetState extends State<MyWidget> {
 - ✅ Better resource management
 - ✅ Comprehensive test coverage
 
+[3.0.0]: https://github.com/Mrbluesky-ai/flutter-alarmplayer/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/Mrbluesky-ai/flutter-alarmplayer/compare/v1.1.1...v2.0.0
 [1.1.1]: https://github.com/Mrbluesky-ai/flutter-alarmplayer/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Mrbluesky-ai/flutter-alarmplayer/compare/v1.0.5...v1.1.0
